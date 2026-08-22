@@ -1,7 +1,7 @@
 ---
 title: "ring-chilling"
 summary: "Wearable ring that reads finger temperature and drives an ESP32 to control air-conditioning over IR"
-order: 2
+order: 5
 tech: ["C++", "ESP32", "Embedded"]
 repo: https://github.com/namitdeb739/ring-chilling
 draft: false

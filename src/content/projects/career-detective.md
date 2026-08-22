@@ -1,7 +1,7 @@
 ---
 title: "career-detective"
 summary: "AI-powered job search tool for the German tech industry"
-order: 3
+order: 2
 tech: ["Python", "LLM"]
 repo: https://github.com/namitdeb739/career-detective
 draft: false

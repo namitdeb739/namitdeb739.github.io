@@ -4,7 +4,7 @@ summary: "macOS setup as code — stow packages, idempotent bootstrap, CI, sched
 order: 6
 tech: ["Shell", "Lua", "GitHub Actions"]
 repo: https://github.com/namitdeb739/dotfiles
-draft: false
+draft: true   # hidden: kept for reference, not a headline piece
 ---
 
 <!-- TODO: optional write-up. Delete this comment and the line below to have
