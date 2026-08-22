@@ -3,9 +3,13 @@
 Personal site, built with [Astro](https://astro.build) and deployed to GitHub
 Pages by `.github/workflows/deploy.yml` on every push to `main`.
 
-**The prose is unwritten on purpose.** Every visible string is a `TODO`
-placeholder — search the repo for `TODO` to find them. Placeholders render with
-a yellow highlight so an unfinished page is obvious in the browser.
+**Facts are filled in; prose is not.** Project names, summaries, tech tags,
+repo links, your name and email are real. What is left as `TODO` is the writing
+only you can do: the one-line intro, the about paragraph, per-project write-ups,
+the meta description, and LinkedIn.
+
+Search the repo for `TODO`. Placeholders render with a yellow highlight, so an
+unfinished page is obvious in the browser rather than shipping silently.
 
 ## Develop
 

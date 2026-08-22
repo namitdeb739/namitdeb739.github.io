@@ -1,6 +1,6 @@
 ---
-// Homepage. Every visible string below is a placeholder — the prose is
-// deliberately not written for you. Search for "TODO" to find them all.
+// Homepage. Names, links and project metadata are real; anything left as a
+// TODO placeholder is something only you can write. Search for "TODO".
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 
@@ -9,8 +9,11 @@ const projects = (await getCollection('projects'))
   .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
 ---
 
-<Base title="TODO: page title" description="TODO: meta description, ~150 chars">
-  <h1><span class="todo">TODO</span>: your name or handle</h1>
+<Base
+  title="Namit Deb"
+  description="TODO: meta description, ~150 chars — shown in search results and link previews"
+>
+  <h1>Namit Deb</h1>
 
   <p class="tagline">
     <!--
@@ -24,33 +27,29 @@ const projects = (await getCollection('projects'))
   <p>
     <!--
       2–4 sentences. Your dissertation is the obvious anchor: what problem,
-      why it matters, what you're actually building.
+      why it matters, what you're actually building. The earth-computers repo
+      is private, so decide how much to say.
     -->
     <span class="todo">TODO</span>: a short paragraph about you and your work.
   </p>
 
   <h2>projects</h2>
   {
-    projects.length === 0 ? (
-      <p><span class="todo">TODO</span>: add a Markdown file to src/content/projects/</p>
-    ) : (
-      projects.map((p) => (
-        <a class="card" href={p.data.repo ?? p.data.link ?? `/projects/${p.id}`}>
-          <h3>{p.data.title}</h3>
-          <p>{p.data.summary}</p>
-          {p.data.tech.length > 0 && (
-            <div class="tech">{p.data.tech.map((t) => <span>{t}</span>)}</div>
-          )}
-        </a>
-      ))
-    )
+    projects.map((p) => (
+      <a class="card" href={p.data.repo ?? p.data.link ?? `/projects/${p.id}`}>
+        <h3>{p.data.title}</h3>
+        <p>{p.data.summary}</p>
+        {p.data.tech.length > 0 && (
+          <div class="tech">{p.data.tech.map((t) => <span>{t}</span>)}</div>
+        )}
+      </a>
+    ))
   }
 
   <h2>elsewhere</h2>
   <ul>
-    <!-- TODO: fill in or delete. Email is already public via your commits. -->
     <li><a href="https://github.com/namitdeb739">github.com/namitdeb739</a></li>
-    <li><span class="todo">TODO</span>: linkedin</li>
-    <li><span class="todo">TODO</span>: email</li>
+    <li><a href="mailto:namitdeb739@gmail.com">namitdeb739@gmail.com</a></li>
+    <li><span class="todo">TODO</span>: LinkedIn</li>
   </ul>
 </Base>
