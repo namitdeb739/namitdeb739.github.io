@@ -1,0 +1,29 @@
+---
+// Detail page for any project whose Markdown file has body content.
+// Projects that only set `repo` link straight to GitHub from the homepage
+// instead, so this route is optional — it exists for write-ups.
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  // Drafts must not get a public URL, not just be hidden from the homepage.
+  const projects = (await getCollection('projects')).filter((p) => !p.data.draft);
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+---
+
+<Base title={project.data.title} description={project.data.summary}>
+  <h1>{project.data.title}</h1>
+  <p class="tagline">{project.data.summary}</p>
+  {project.data.tech.length > 0 && (
+    <div class="tech">{project.data.tech.map((t) => <span>{t}</span>)}</div>
+  )}
+  <Content />
+  {project.data.repo && <p><a href={project.data.repo}>source →</a></p>}
+</Base>
