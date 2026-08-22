@@ -4,6 +4,7 @@
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 
+// Cards open each project's own page; the repo link lives there as "source →".
 const projects = (await getCollection('projects'))
   .filter((p) => !p.data.draft)
   .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
@@ -36,7 +37,7 @@ const projects = (await getCollection('projects'))
   <h2>projects</h2>
   {
     projects.map((p) => (
-      <a class="card" href={p.data.repo ?? p.data.link ?? `/projects/${p.id}`}>
+      <a class="card" href={`/projects/${p.id}`}>
         <h3>{p.data.title}</h3>
         <p>{p.data.summary}</p>
         {p.data.tech.length > 0 && (

@@ -7,8 +7,8 @@ repo: https://github.com/namitdeb739/kittcat
 draft: false
 ---
 
-<!-- TODO: optional write-up. Delete this and the line below to link straight
-     to GitHub instead of generating this page. -->
+Purpose: coordinate servos and a solenoid to pick up a bag, accept an inserted
+item, and release/restart.
 
-TODO: what problem it solves, one decision that was genuinely hard, and what
-you would change.
+Behavior: a small state machine runs a fixed sequence (pick up, wait for
+insert, close valve, wait for retrieval, restart).

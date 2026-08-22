@@ -39,8 +39,8 @@ Optional write-up. Appears at /projects/<filename>.
 ```
 
 - `draft: true` hides it from the homepage **and** stops it getting a public URL.
-- If you only set `repo`, the homepage card links straight to GitHub and the
-  detail page is never generated.
+- Cards link to the project's own page; the `repo` link appears there as
+  "source →". Set `repo` for the link, omit it for private work.
 - `order` sorts ascending; omit it and the project sorts last.
 
 ## Structure
