@@ -1,10 +1,12 @@
 ---
 title: "dotfiles"
-summary: "macOS setup as code — stow packages, idempotent bootstrap, CI, scheduled maintenance"
+summary: "macOS setup as code: stow packages, idempotent bootstrap, CI, scheduled maintenance"
 order: 6
 tech: ["Shell", "Lua", "GitHub Actions"]
 repo: https://github.com/namitdeb739/dotfiles
 draft: true   # hidden: kept for reference, not a headline piece
+year: 2025
+status: In progress
 ---
 
 Personal development environment configuration, managed with

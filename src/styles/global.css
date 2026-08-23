@@ -1,82 +1,325 @@
-/* Catppuccin Latte / Mocha, matching ghostty, nvim and VS Code.
-   Follows the visitor's system appearance, same as the rest of the setup. */
-:root {
-  --bg: #eff1f5;
-  --fg: #4c4f69;
-  --muted: #6c6f85;
-  --surface: #e6e9ef;
-  --border: #ccd0da;
-  --accent: #1e66f5;
-  --mono: "JetBrainsMono Nerd Font Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-}
+/* ============================================================================
+   Repertory — the site's one design system, shared by the index and every
+   project page.
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #1e1e2e;
-    --fg: #cdd6f4;
-    --muted: #a6adc8;
-    --surface: #313244;
-    --border: #45475a;
-    --accent: #89b4fa;
-  }
+   Cinema evoked through catalogue conventions rather than film-stock effects.
+   The references are MUBI (identity by Spin) and the Criterion spine: one
+   typeface used decisively, a numbered shelf, and a colour system where each
+   entry carries its own hue rather than the whole site sharing one accent.
+
+   Saul Bass supplies the rest — a few vivid colours, bold geometry, nothing
+   else. No texture, no grain, no ornament.
+
+   `color-scheme` is load-bearing: it makes light-dark() resolve, and it themes
+   the scrollbar and the canvas paint before CSS arrives, which removes the
+   white flash on load in dark mode.
+   ========================================================================= */
+
+:root {
+  color-scheme: light dark;
+
+  /* True cinema black in dark, warm paper in light. Near-neutral by design:
+     the accents only sing off a ground that stays out of their way. */
+  --bg:     light-dark(#faf8f5, #0b0b0f);
+  --raised: light-dark(#f1ede7, #141419);
+  --fg:     light-dark(#16161a, #f2f0ec);
+  --muted:  light-dark(#6b6862, #8b8880);
+  --line:   light-dark(#dcd7cf, #26262e);
+
+  /* One hue per project, each earning its assignment. All five clear 4.5:1
+     against both grounds, so they are safe on small text. */
+  --h-soil:    light-dark(#3d7a19, #9bd94f);  /* growing things     */
+  --h-data:    light-dark(#6d34a0, #b988f0);  /* analysis           */
+  --h-machine: light-dark(#a85f00, #ffab2e);  /* actuators, motion  */
+  --h-flight:  light-dark(#00707f, #35d3e8);  /* sky, telemetry     */
+  --h-thermal: light-dark(#c8352f, #ff6a5e);  /* heat               */
+  --h-cool:    light-dark(#1e5fd0, #7fb8ff);  /* cooling            */
+  --h: var(--h-flight);
+
+  --mono:   var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --bangla: var(--font-bangla), "Noto Sans Bengali", sans-serif;
 }
 
 * { box-sizing: border-box; }
+html { font-size: 100%; -webkit-text-size-adjust: 100%; }
 
 body {
-  margin: 0 auto;
-  padding: 4rem 1.25rem 6rem;
-  max-width: 46rem;
+  margin: 0;
   background: var(--bg);
   color: var(--fg);
   font-family: var(--mono);
-  font-size: 15px;
-  line-height: 1.7;
+  font-size: 1rem;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-a { color: var(--accent); text-underline-offset: 3px; }
-a:hover { text-decoration-thickness: 2px; }
+.wrap { max-width: 68rem; margin: 0 auto; padding: 0 2rem; }
 
-h1, h2, h3 { line-height: 1.25; font-weight: 600; }
-h1 { font-size: 1.6rem; margin-bottom: 0.25rem; }
-h2 { font-size: 1.1rem; margin-top: 3rem; color: var(--muted); text-transform: lowercase; letter-spacing: 0.04em; }
+/* --- Masthead ------------------------------------------------------------ */
 
-nav { display: flex; gap: 1.25rem; margin-bottom: 3rem; }
-
-.tagline { color: var(--muted); margin-top: 0; }
-
-.card {
-  display: block;
-  padding: 1rem 1.15rem;
-  margin: 0.75rem 0;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--surface);
-  color: inherit;
-  text-decoration: none;
-  transition: border-color 0.15s ease;
+header.bar {
+  display: flex; align-items: center; gap: 2rem;
+  padding: 1.5rem 0; border-bottom: 1px solid var(--line);
+  font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.16em;
 }
-.card:hover { border-color: var(--accent); }
-.card h3 { margin: 0 0 0.35rem; font-size: 1rem; }
-.card p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+header.bar a {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  color: var(--muted); text-decoration: none; transition: color 0.15s ease;
+}
+header.bar a:hover { color: var(--fg); }
+header.bar .spacer { margin-left: auto; display: flex; gap: 1.75rem; }
+.icon { width: 15px; height: 15px; flex: none; }
 
-.tech { margin-top: 0.6rem; display: flex; flex-wrap: wrap; gap: 0.4rem; }
-.tech span {
-  font-size: 0.72rem;
-  padding: 0.1rem 0.45rem;
-  border: 1px solid var(--border);
-  border-radius: 4px;
+/* The mark: ন over দ, the initials, stacked. Monochrome — colour belongs to
+   the projects, and the mark staying neutral is what lets the shelf's hues read. */
+.mark-link { display: inline-flex; flex: none; color: var(--muted); transition: color 0.15s ease; }
+.mark-link:hover { color: var(--fg); }
+.monogram { height: 30px; width: auto; }
+
+/* Vertical spine down the left margin, the way a title reads off a shelf. */
+.rail {
+  position: fixed; left: 1rem; top: 50%; z-index: 2;
+  transform: translateY(-50%); writing-mode: vertical-rl;
+  font-size: 0.66rem; letter-spacing: 0.34em; text-transform: uppercase;
+  color: var(--muted); pointer-events: none;
+}
+@media (max-width: 78rem) { .rail { display: none; } }
+
+/* --- Section labels ------------------------------------------------------ */
+
+.label {
+  display: flex; align-items: baseline; gap: 1rem;
+  margin: 0 0 0.5rem; padding-top: 4rem;
+  font-size: 0.72rem; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.2em; color: var(--muted);
+}
+.label::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+
+/* --- Title card ---------------------------------------------------------- */
+
+.titlecard { padding: clamp(4rem, 12vh, 9rem) 0 clamp(3rem, 8vh, 6rem); }
+.titlecard h1 {
+  margin: 0;
+  font-size: clamp(3rem, 11vw, 8.5rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 0.9;
+  max-width: 5ch;              /* breaks after "Namit" on its own terms */
+}
+.titlecard .sub {
+  margin: 2rem 0 0; max-width: 34rem;
+  font-size: clamp(1rem, 1.6vw, 1.25rem);
+  color: var(--muted); text-wrap: pretty;
+}
+
+/* Billing block, set the way a title card credits a crew. */
+.billing {
+  display: flex; flex-wrap: wrap; gap: 0 3rem; margin: 2.5rem 0 0;
+  font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.16em;
   color: var(--muted);
 }
+.billing b { display: block; font-weight: 600; letter-spacing: 0.1em; color: var(--fg); }
 
-footer { margin-top: 5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.85rem; }
+.lede {
+  max-width: 46rem; margin: 1.5rem 0 0;
+  font-size: clamp(1rem, 1.4vw, 1.15rem); text-wrap: pretty;
+}
+
+/* --- The shelf -----------------------------------------------------------
+   Every entry is a numbered spine. The row is the unit, not a tile: it gives
+   the titles room to be set large, which a 2:3 poster grid never does. */
+
+.shelf { margin-top: 2rem; border-top: 1px solid var(--line); }
+
+.spine {
+  position: relative;
+  display: grid;
+  grid-template-columns: 3rem 4.25rem 1fr auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.75rem 2.75rem 1.75rem 1.25rem;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none; color: inherit;
+  isolation: isolate;
+}
+.spine > * { transition: transform 0.18s ease; }
+.spine:hover > *, .spine:focus-visible > * { transform: translateX(0.6rem); }
+
+/* Colour wash wiping in from the left — the entry's own hue, so the shelf
+   reads as a colour index. Transform only, so it stays off the main thread. */
+.spine::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: color-mix(in oklab, var(--h) 12%, transparent);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.18s ease;
+}
+.spine::after {
+  content: ""; position: absolute; inset: 0 auto 0 0; width: 4px;
+  background: var(--h); transform: scaleY(0); transform-origin: bottom;
+  transition: transform 0.18s ease;
+}
+.spine:hover::before, .spine:focus-visible::before { transform: scaleX(1); }
+.spine:hover::after,  .spine:focus-visible::after  { transform: scaleY(1); }
+
+.spine .mark {
+  width: 100%; height: auto; color: var(--h);
+  opacity: 0.85; transition: transform 0.22s ease, opacity 0.22s ease;
+}
+.spine:hover .mark, .spine:focus-visible .mark { transform: rotate(-6deg) scale(1.08); opacity: 1; }
+
+.no {
+  font-family: var(--bangla);
+  font-size: 1.35rem; font-weight: 600; line-height: 1;
+  color: var(--h); letter-spacing: 0.02em;
+}
+.spine h2 {
+  margin: 0; font-size: clamp(1.4rem, 3.2vw, 2.4rem);
+  font-weight: 600; letter-spacing: -0.035em; line-height: 1.05;
+}
+.spine .meta {
+  margin: 0.5rem 0 0; font-size: 0.8rem; color: var(--muted);
+  max-width: 44rem; text-wrap: pretty;
+}
+.spine .right {
+  text-align: right; font-size: 0.78rem; color: var(--muted);
+  font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.spine .right b { display: block; color: var(--h); font-weight: 600; }
+
+/* Rows are links; without this nothing says so until you hover. */
+.spine .go {
+  position: absolute; right: 0.25rem; top: 50%;
+  margin-top: -0.6em; color: var(--h);
+  opacity: 0; transform: translateX(-0.5rem);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+.spine:hover .go, .spine:focus-visible .go { opacity: 1; transform: none; }
+@media (hover: none) {
+  .spine .go { opacity: 0.55; transform: none; }
+  .spine:hover > * { transform: none; }
+}
+
+@media (max-width: 44rem) {
+  .spine { grid-template-columns: 2.5rem 2.75rem 1fr; }
+  .spine .right { grid-column: 3; text-align: left; margin-top: 0.5rem; }
+}
+
+/* --- Project page --------------------------------------------------------
+   Same grammar as a shelf row, opened out: the mark and number keep their
+   places, the title takes the display size. */
+
+.back {
+  display: inline-block; margin: 2.5rem 0 0;
+  font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.16em;
+  color: var(--muted); text-decoration: none;
+}
+.back:hover { color: var(--fg); }
+
+.entry { display: grid; grid-template-columns: 5.5rem 1fr; gap: 2rem; align-items: start;
+         padding: 2.5rem 0 0; }
+.entry .mark { width: 100%; height: auto; color: var(--h); }
+.entry h1 {
+  margin: 0; font-size: clamp(2rem, 5.5vw, 3.75rem);
+  font-weight: 700; letter-spacing: -0.04em; line-height: 0.95;
+  overflow-wrap: anywhere;
+}
+.entry .sub { margin: 1rem 0 0; max-width: 44rem; color: var(--muted); text-wrap: pretty; }
+.entry .no { display: block; margin-bottom: 0.9rem; }
+@media (max-width: 44rem) {
+  .entry { grid-template-columns: 3.5rem 1fr; gap: 1.25rem; }
+}
+
+/* Credits, as hairline rows rather than a boxed panel — role/value pairs are
+   a better display for this metadata than a bulleted list would be. */
+.credits { margin: 2.5rem 0 0; font-size: 0.85rem; }
+.credits div {
+  display: grid; grid-template-columns: minmax(6rem, 9rem) 1fr; gap: 1.5rem;
+  padding: 0.7rem 0; border-bottom: 1px solid var(--line);
+}
+.credits dt {
+  color: var(--muted); text-transform: uppercase;
+  letter-spacing: 0.14em; font-size: 0.68rem; padding-top: 0.25em;
+}
+.credits dd { margin: 0; font-weight: 500; }
+.credits a { color: var(--h); text-underline-offset: 3px; }
+
+.tags { margin-top: 1.5rem; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.tags span {
+  font-size: 0.7rem; letter-spacing: 0.05em; padding: 0.15rem 0.55rem;
+  border-radius: 999px; border: 1px solid var(--line); color: var(--muted);
+}
+.tags span:first-child {
+  border-color: color-mix(in oklab, var(--h) 45%, transparent);
+  background: color-mix(in oklab, var(--h) 13%, transparent); color: var(--fg);
+}
+
+/* A real photograph of the hardware, where one exists. Set `poster` in the
+   project's frontmatter and it renders here. */
+.still {
+  display: block; width: 100%; height: auto; margin: 2.5rem 0 0;
+  border: 1px solid var(--line); border-radius: 6px;
+}
+
+/* --- Prose --------------------------------------------------------------- */
+
+.prose { max-width: 46rem; margin-top: 2rem; }
+.prose p { margin: 0 0 1.25rem; text-wrap: pretty; }
+.prose h2 { margin: 2.5rem 0 0.75rem; font-size: 1.15rem; font-weight: 600; letter-spacing: -0.01em; }
+.prose ul, .prose ol { padding-left: 1.2rem; margin: 0 0 1.25rem; }
+.prose li { margin-bottom: 0.4rem; }
+.prose a { color: var(--h); text-underline-offset: 3px; }
+.prose em { color: var(--muted); }
+.prose code {
+  font-size: 0.9em; padding: 0.1em 0.35em; border-radius: 4px;
+  background: var(--raised); border: 1px solid var(--line);
+}
+.prose pre {
+  padding: 1rem; border-radius: 6px; background: var(--raised);
+  border: 1px solid var(--line); overflow-x: auto;
+}
+.prose pre code { border: 0; padding: 0; background: none; }
+.prose blockquote {
+  margin: 0 0 1.25rem; padding-left: 1rem;
+  border-left: 3px solid var(--h); color: var(--muted);
+}
+
+/* --- Adjacent entries ---------------------------------------------------- */
+
+.adjacent { display: flex; gap: 2rem; margin-top: 4rem; border-top: 1px solid var(--line); }
+.adjacent a {
+  flex: 1; padding: 1.5rem 0; text-decoration: none; color: inherit;
+  font-size: 0.9rem; font-weight: 600; letter-spacing: -0.02em;
+}
+.adjacent a:hover { color: var(--h); }
+.adjacent small {
+  display: block; margin-bottom: 0.35rem; color: var(--muted);
+  font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.16em;
+  font-weight: 400;
+}
+.adjacent .next { text-align: right; }
+
+/* --- Footer -------------------------------------------------------------- */
+
+footer {
+  margin: 6rem 0 4rem; padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted); font-size: 0.85rem;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1.25rem;
+}
+footer a {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  color: var(--fg); text-underline-offset: 4px;
+}
 
 /* Highlights unfilled placeholders so they cannot ship by accident. */
-.todo {
-  background: #f9e2af;
-  color: #1e1e2e;
-  padding: 0 0.3rem;
-  border-radius: 3px;
-  font-weight: 600;
+.todo { background: #ffb224; color: #0b0b0f; padding: 0 0.3rem; border-radius: 3px; font-weight: 600; }
+
+:focus-visible { outline: 2px solid var(--h); outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

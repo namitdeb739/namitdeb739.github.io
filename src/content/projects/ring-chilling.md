@@ -5,6 +5,9 @@ order: 5
 tech: ["C++", "ESP32", "Embedded"]
 repo: https://github.com/namitdeb739/ring-chilling
 draft: false
+year: 2024
+hardware: ESP32
+status: Complete
 ---
 
 This project involves developing a wearable ring that detects body conditions

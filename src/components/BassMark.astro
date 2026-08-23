@@ -1,0 +1,69 @@
+---
+// Cut-paper marks, one per project, describing what the project actually does.
+//
+// Saul Bass built whole title sequences from circles, bars and triangles in
+// three or four flat colours — the mark had to carry the film's subject, not
+// just decorate it. Same rule here: each is a diagram of the work, drawn in
+// that grammar. Flat shapes, no gradients, legible at 40px.
+//
+// Arc geometry is checked against the viewBox: an arc's apex sits a sagitta
+// above its chord, and the stroke adds half its width on top of that. Get it
+// wrong and the top of the mark is silently clipped.
+interface Props { kind: string; }
+const { kind } = Astro.props;
+---
+
+<svg class="mark" viewBox="0 0 64 64" fill="none"
+     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  {/* soil — a cell buried in the ground, powering a transmission upward */}
+  {kind === 'soil' && (
+    <>
+      <path d="M4 42 H60" stroke="currentColor" stroke-width="3" />
+      <rect x="28" y="44" width="8" height="14" fill="currentColor" />
+      <path d="M32 42 V28" stroke="currentColor" stroke-width="3" />
+      <circle cx="32" cy="25" r="3.5" fill="currentColor" />
+      <path d="M21 20 A14 14 0 0 1 43 20" stroke="currentColor" stroke-width="3" />
+      <path d="M13 15 A24 24 0 0 1 51 15" stroke="currentColor" stroke-width="3" />
+    </>
+  )}
+
+  {/* data — a detective's lens over a trend: the name and the method at once */}
+  {kind === 'data' && (
+    <>
+      <circle cx="26" cy="26" r="17" stroke="currentColor" stroke-width="3.5" />
+      <path d="M17 31 L23 24 L28 28 L36 18" stroke="currentColor" stroke-width="3" />
+      <path d="M38.5 38.5 L57 57" stroke="currentColor" stroke-width="4.5" />
+    </>
+  )}
+
+  {/* machine — a gripper closing on the item it is about to pick up */}
+  {kind === 'machine' && (
+    <>
+      <path d="M32 4 V16" stroke="currentColor" stroke-width="4" />
+      <rect x="17" y="16" width="30" height="6" fill="currentColor" />
+      <path d="M22 22 V34 L28 40" stroke="currentColor" stroke-width="3.5" />
+      <path d="M42 22 V34 L36 40" stroke="currentColor" stroke-width="3.5" />
+      <rect x="26" y="45" width="12" height="12" fill="currentColor" />
+    </>
+  )}
+
+  {/* flight — a descent trajectory and the ground station tracking it */}
+  {kind === 'flight' && (
+    <>
+      <path d="M6 6 Q30 26 46 46" stroke="currentColor" stroke-width="3" stroke-dasharray="6 5" />
+      <circle cx="47" cy="47" r="5" fill="currentColor" />
+      <path d="M8 60 H30" stroke="currentColor" stroke-width="3" />
+      <path d="M19 60 V44" stroke="currentColor" stroke-width="3" />
+      <path d="M11 40 A12 12 0 0 1 27 40" stroke="currentColor" stroke-width="3" />
+    </>
+  )}
+
+  {/* thermal — a ring reading temperature across one arc of the finger */}
+  {kind === 'thermal' && (
+    <>
+      <circle cx="32" cy="32" r="21" stroke="currentColor" stroke-width="5" />
+      <path d="M32 6 A26 26 0 0 1 58 32 L32 32 Z" fill="currentColor" opacity="0.5" />
+      <circle cx="32" cy="32" r="5" fill="currentColor" />
+    </>
+  )}
+</svg>
