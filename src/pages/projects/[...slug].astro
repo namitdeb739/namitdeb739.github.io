@@ -1,29 +1,71 @@
 ---
-// Detail page for any project whose Markdown file has body content.
-// Projects that only set `repo` link straight to GitHub from the homepage
-// instead, so this route is optional — it exists for write-ups.
-import { getCollection, render } from 'astro:content';
+// A project's own page, in the same grammar as its shelf row opened out: the
+// mark and the number keep their places, the title takes the display size, and
+// the page wears the project's colour throughout.
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import BassMark from '../../components/BassMark.astro';
+import { getShelf, identityOf, bengaliNum } from '../../lib/projects';
 
 export async function getStaticPaths() {
-  // Drafts must not get a public URL, not just be hidden from the homepage.
-  const projects = (await getCollection('projects')).filter((p) => !p.data.draft);
-  return projects.map((project) => ({
+  const all = await getShelf();
+  return all.map((project, i) => ({
     params: { slug: project.id },
-    props: { project },
+    props: { project, index: i, prev: all[i - 1] ?? null, next: all[i + 1] ?? null },
   }));
 }
 
-const { project } = Astro.props;
+const { project, index, prev, next } = Astro.props;
+const { title, summary, tech, repo, link, year, hardware, status, poster } = project.data;
 const { Content } = await render(project);
+const id = identityOf(project.id);
 ---
 
-<Base title={project.data.title} description={project.data.summary}>
-  <h1>{project.data.title}</h1>
-  <p class="tagline">{project.data.summary}</p>
-  {project.data.tech.length > 0 && (
-    <div class="tech">{project.data.tech.map((t) => <span>{t}</span>)}</div>
+<Base
+  title={`${title}${year ? ` (${year})` : ''}`}
+  description={summary}
+  hue={id.hue}
+  rail={`${title}${year ? ` · ${year}` : ''}`}
+>
+  <a class="back" href="/">← index</a>
+
+  <div class="entry">
+    <BassMark kind={id.kind} />
+    <div>
+      <span class="no" lang="bn">{bengaliNum(index + 1)}</span>
+      <h1 transition:name={`title-${project.id}`}>{title}</h1>
+      <p class="sub">{summary}</p>
+    </div>
+  </div>
+
+  {tech.length > 0 && <div class="tags">{tech.map((t) => <span>{t}</span>)}</div>}
+
+  {poster && (
+    <Image class="still" src={poster} alt={`${title} hardware`} widths={[640, 1024, 1400]} loading="eager" />
   )}
-  <Content />
-  {project.data.repo && <p><a href={project.data.repo}>source →</a></p>}
+
+  <p class="label">Credits</p>
+  <dl class="credits">
+    <div><dt>Directed by</dt><dd>Namit Deb</dd></div>
+    {year && <div><dt>Released</dt><dd>{year}</dd></div>}
+    {tech.length > 0 && <div><dt>Language</dt><dd>{tech[0]}</dd></div>}
+    {hardware && <div><dt>Hardware</dt><dd>{hardware}</dd></div>}
+    {status && <div><dt>Status</dt><dd>{status}</dd></div>}
+    <div>
+      <dt>Source</dt>
+      <dd>
+        {repo ? <a href={repo}>{repo.replace('https://github.com/', '')}</a> : 'Private'}
+        {link && <> · <a href={link}>live</a></>}
+      </dd>
+    </div>
+  </dl>
+
+  <p class="label">Synopsis</p>
+  <div class="prose"><Content /></div>
+
+  <nav class="adjacent">
+    {prev && <a href={`/projects/${prev.id}`}><small>← Previous</small>{prev.data.title}</a>}
+    {next && <a class="next" href={`/projects/${next.id}`}><small>Next →</small>{next.data.title}</a>}
+  </nav>
 </Base>

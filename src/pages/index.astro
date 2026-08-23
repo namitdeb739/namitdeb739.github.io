@@ -1,50 +1,61 @@
 ---
-// Homepage. Names, links and project metadata are real; anything left as a
-// Prose is carried across from the profile README — your words, not written here.
-import { getCollection } from 'astro:content';
+// The shelf: every project as a numbered spine, in its own colour.
+//
+// Names, links and project metadata are real. Prose is carried across from the
+// profile README — your words, not written here.
 import Base from '../layouts/Base.astro';
+import BassMark from '../components/BassMark.astro';
+import { getShelf, identityOf, bengaliNum } from '../lib/projects';
 
-// Cards open each project's own page; the repo link lives there as "source →".
-const projects = (await getCollection('projects'))
-  .filter((p) => !p.data.draft)
-  .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
+const films = await getShelf();
+const years = films.map((f) => f.data.year).filter((y): y is number => !!y);
+const span = years.length ? `${Math.min(...years)}–${Math.max(...years)}` : '';
 ---
 
 <Base
   title="Namit Deb"
   description="Computer scientist interested in sustainable applications of technology. Undergraduate thesis on low-power computers powered by soil microbial fuel-cells."
+  rail={`Namit Deb · Selected work${span ? ` · ${span}` : ''}`}
 >
-  <h1>Namit Deb</h1>
+  <section class="titlecard">
+    <h1>Namit Deb</h1>
+    <p class="sub">
+      Computer scientist interested in sustainable applications of technology.
+    </p>
+    <div class="billing">
+      <span><b>Embedded</b>bare-metal C · MSP430 · ESP32</span>
+      <span><b>Python</b>uv · ruff · mypy · pytest</span>
+      <span><b>Now</b>Undergraduate thesis</span>
+    </div>
+  </section>
 
-  <p class="tagline">
-    Computer scientist interested in sustainable applications of technology.
-  </p>
-
-  <h2>currently</h2>
-  <p>
+  <p class="label">Currently</p>
+  <p class="lede">
     Working on my undergraduate thesis, developing low-power computers with
     wireless communications capabilities powered by soil microbial fuel-cells.
     This could have major applications in the future of the agriculture
     industry!
   </p>
 
-  <h2>projects</h2>
-  {
-    projects.map((p) => (
-      <a class="card" href={`/projects/${p.id}`}>
-        <h3>{p.data.title}</h3>
-        <p>{p.data.summary}</p>
-        {p.data.tech.length > 0 && (
-          <div class="tech">{p.data.tech.map((t) => <span>{t}</span>)}</div>
-        )}
-      </a>
-    ))
-  }
-
-  <h2>elsewhere</h2>
-  <ul>
-    <li><a href="https://github.com/namitdeb739">github.com/namitdeb739</a></li>
-    <li><a href="mailto:namitdeb739@gmail.com">namitdeb739@gmail.com</a></li>
-    <li><a href="https://www.linkedin.com/in/namitdeb739">linkedin.com/in/namitdeb739</a></li>
-  </ul>
+  <p class="label">Selected work</p>
+  <div class="shelf">
+    {films.map((p, i) => {
+      const id = identityOf(p.id);
+      return (
+        <a class="spine" href={`/projects/${p.id}`} style={`--h: var(--h-${id.hue})`}>
+          <span class="no" lang="bn">{bengaliNum(i + 1)}</span>
+          <BassMark kind={id.kind} />
+          <span>
+            <h2 transition:name={`title-${p.id}`}>{p.data.title}</h2>
+            <p class="meta">{p.data.summary}</p>
+          </span>
+          <span class="right">
+            <b>{p.data.status ?? p.data.year ?? ''}</b>
+            {[p.data.year, ...p.data.tech.slice(0, 2)].filter(Boolean).join(' · ')}
+          </span>
+          <span class="go" aria-hidden="true">→</span>
+        </a>
+      );
+    })}
+  </div>
 </Base>

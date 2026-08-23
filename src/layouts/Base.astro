@@ -1,36 +1,69 @@
 ---
+import { Font } from 'astro:assets';
+import { ClientRouter } from 'astro:transitions';
+import Icon from '../components/Icon.astro';
+import Mark from '../components/Mark.astro';
 import '../styles/global.css';
 
 interface Props {
   title: string;
   description?: string;
+  /** Sets the page's accent, so a project page wears its own colour. */
+  hue?: string;
+  rail?: string;
 }
 
-const { title, description } = Astro.props;
+const { title, description, hue, rail } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL('/og.png', Astro.site).href;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" style={hue ? `--h: var(--h-${hue})` : undefined}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Before the stylesheet, so the browser paints the right canvas colour
+         on first frame rather than flashing white in dark mode. -->
+    <meta name="color-scheme" content="light dark" />
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
+    <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <Font cssVariable="--font-mono" preload />
+    <Font cssVariable="--font-bangla" preload />
+    <ClientRouter />
   </head>
+
   <body>
-    <nav>
-      <a href="/">index</a>
-      <a href="https://github.com/namitdeb739">github</a>
-      <a href="mailto:namitdeb739@gmail.com">email</a>
-      <a href="https://www.linkedin.com/in/namitdeb739">linkedin</a>
-      <!-- A CV link could go here. -->
-    </nav>
-    <main>
-      <slot />
-    </main>
-    <footer>
-      Feel free to reach out!
-    </footer>
+    {rail && <span class="rail">{rail}</span>}
+    <div class="wrap">
+      <header class="bar">
+        <a class="mark-link" href="/" aria-label="Namit Deb, index"><Mark /></a>
+        <span class="spacer">
+          <a href="https://github.com/namitdeb739"><Icon name="github" />github</a>
+          <a href="https://www.linkedin.com/in/namitdeb739"><Icon name="linkedin" />linkedin</a>
+        </span>
+      </header>
+
+      <main>
+        <slot />
+      </main>
+
+      <!-- The reach-out line is the page's one call to action, so the address
+           lives here rather than being repeated in the masthead. -->
+      <footer>
+        <span>Feel free to reach out!</span>
+        <a href="mailto:namitdeb739@gmail.com"><Icon name="email" />namitdeb739@gmail.com</a>
+      </footer>
+    </div>
   </body>
 </html>

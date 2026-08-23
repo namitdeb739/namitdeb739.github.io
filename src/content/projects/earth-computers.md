@@ -4,6 +4,10 @@ summary: "Low-power computers with wireless communication, powered by soil micro
 order: 1
 tech: ["bare-metal C", "MSP430FR5994", "Python"]
 draft: false
+year: 2026
+hardware: MSP430FR5994
+status: In progress
+featured: true
 ---
 
 Developing low-power computers with wireless communications capabilities
